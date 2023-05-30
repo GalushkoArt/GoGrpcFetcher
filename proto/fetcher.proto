@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package fetcher;
+
+option go_package = "../pkg/fetcher";
+
+service FetcherService {
+  rpc Fetch(FetchRequest) returns (FetchResponse) {}
+
+  rpc List(GetRequest) returns (GetResponse) {}
+}
+
+message FetchRequest {
+  string url = 1;
+}
+
+message FetchResponse {
+  FetchStatus status = 1;
+  string content = 2;
+}
+
+enum FetchStatus {
+  DONE = 0;
+  IN_PROGRESS = 1;
+  FAILED = 2;
+}
+
+message GetRequest {
+  PagingParams paging = 1;
+  repeated SortParams sorting = 2;
+}
+
+message PagingParams {
+  int64 page = 1;
+  int64 pageSize = 2;
+}
+
+message SortParams {
+  SortField field = 1;
+  bool asc = 2;
+}
+
+enum SortField {
+  NAME = 0;
+  PRICE = 1;
+}
+
+message GetResponse {
+  repeated Item items = 1;
+  PagingParams paging = 2;
+  repeated SortParams sorting = 3;
+}
+
+message Item {
+  string name = 1;
+  int32 price = 2;
+}
